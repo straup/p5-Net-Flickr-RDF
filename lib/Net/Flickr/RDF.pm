@@ -370,7 +370,7 @@ sub build_photo_uri {
         my $self = shift;
         my $data = shift;
 
-        return sprintf("%s%s/%d", $FLICKR_URL_PHOTOS, $data->{user_id}, $data->{photo_id});
+        return sprintf("%s%s/%s", $FLICKR_URL_PHOTOS, $data->{user_id}, $data->{photo_id});
 }
 
 =head2 __PACKAGE__->build_geo_uri(\%data)
@@ -1045,7 +1045,7 @@ sub make_photo_triples {
         my $self = shift;
         my $data = shift;
 
-        my $photo   = sprintf("%s%s/%d", $FLICKR_URL_PHOTOS, $data->{user_id}, $data->{photo_id});        
+        my $photo   = sprintf("%s%s/%s", $FLICKR_URL_PHOTOS, $data->{user_id}, $data->{photo_id});        
         my @triples = ();
 
         # 
@@ -1556,7 +1556,7 @@ sub make_geonames_triples {
                 my $photo_url = $self->build_photo_uri($data);
                 my $geo_url = $self->build_geo_uri($data);
 
-                my $geoname_url = sprintf("%s?geonameId=%d", $GEONAMES_URL_RDF, $xml->findvalue("/geonames/geoname/geonameId"));
+                my $geoname_url = sprintf("%s?geonameId=%s", $GEONAMES_URL_RDF, $xml->findvalue("/geonames/geoname/geonameId"));
 
                 #
                 # basic reverse geocoding
