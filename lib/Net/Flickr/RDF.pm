@@ -660,9 +660,9 @@ sub collect_photo_data {
                                            secret   => $secret}});       
 
         if ($exif) {
-                foreach my $tag ($exif->findnodes("/rsp/photo/exif[\@tagspace='EXIF']")) {
+                foreach my $tag ($exif->findnodes("/rsp/photo/exif[\@tagspace='EXIF']"), $exif->findnodes("/rsp/photo/exif[\@tagspace='ExifIFD']")) {
                         
-                        my $facet   = $tag->getAttribute("tagspace");
+                        my $facet   = 'EXIF'; # $tag->getAttribute("tagspace");
                         my $tag_dec = $tag->getAttribute("tag");
                         my $value   = $tag->findvalue("clean") || $tag->findvalue("raw");
                         $data{exif}->{$facet}->{$tag_dec} = $value;
@@ -1323,7 +1323,7 @@ sub make_photo_triples {
 
                 foreach my $tag (keys %{$data->{exif}->{$facet}}) {
                         
-                        my $label = $RDFMAP{$facet}->{$tag};
+                        my $label = $tag =~ /^\d+$/ ? $RDFMAP{$facet}->{$tag} : $tag;
                         
                         if (! $label) {
                                 $self->log()->warning("can't find any label for $facet tag : $tag");
@@ -1334,7 +1334,7 @@ sub make_photo_triples {
 
                         # dateTimeOriginal/Digitized
 
-                        if (($facet eq "EXIF") && (($tag == 36867) || ($tag == 36868))) {
+                        if ( $facet eq "EXIF" and $label =~ /^dateTime(?:Original|Digitized)$/ ) {
 
                                 my $time = str2time($value);
                                 $value   = time2str("%Y-%m-%dT%H:%M:%S%Z", $time);
