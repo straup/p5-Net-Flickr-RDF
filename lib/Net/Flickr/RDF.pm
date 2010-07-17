@@ -736,6 +736,33 @@ sub collect_photo_data {
         }    	   
 
         #
+        # People in photo
+        #
+
+        my $folks = $self->api_call({
+            method => "flickr.photos.people.getList",
+            args   => { photo_id => $id }
+        });
+
+        if ($folks) {
+            foreach my $person ($folks->findnodes("/rsp/people/person")) {
+                $data{people} ||= [];
+
+                my %person = map {
+                    $_ => $person->getAttribute($_)
+                } qw (x y h w username realname);
+                
+                $person{id} = $person->getAttribute('nsid');
+                $person{author} = $person->getAttribute('added_by');
+
+                push @{$data{people}}, \%person;
+
+                $data{users}->{$person{id}} = $self->collect_user_data($person{id});
+                $data{users}->{$person{author}} = $self->collect_user_data($person{author});
+            }
+        }
+
+        #
         # Geo
         #
 
@@ -1070,6 +1097,7 @@ sub make_photo_triples {
         my $flickr_machinetag = $DEFAULT_NS{flickr}."machinetag";
         my $flickr_note       = $DEFAULT_NS{flickr}."note";
         my $flickr_comment    = $DEFAULT_NS{flickr}."comment";
+        my $flickr_persontag  = $DEFAULT_NS{flickr}."persontag";
         my $flickr_group      = $DEFAULT_NS{flickr}."group";
         my $flickr_grouppool  = $DEFAULT_NS{flickr}."grouppool";
         
@@ -1093,6 +1121,10 @@ sub make_photo_triples {
 
         if (exists($data->{comments})) {
                 push @triples, [$flickr_comment, $self->uri_shortform("rdfs","subClassOf"), $anno_annotation];
+        }
+
+        if (exists($data->{people})) {
+                push @triples, [$flickr_persontag, $self->uri_shortform("rdfs","subClassOf"), $anno_annotation];
         }
 
         #
@@ -1224,6 +1256,33 @@ sub make_photo_triples {
                         push @triples, [$note,$self->uri_shortform("i","boundingBox"), "$n->{x} $n->{y} $n->{w} $n->{h}"];
                         push @triples, [$note,$self->uri_shortform("i","regionDepicts"),$data->{files}->{'Medium'}->{'uri'}];
                         push @triples, [$note,$self->uri_shortform("rdf","type"),$self->uri_shortform("flickr","note")];
+                }
+        }
+        
+        #
+        # people annotations
+        #
+        
+        if (exists($data->{people})) {
+                
+                foreach my $p (@{$data->{people}}) {
+                        
+                        # TO DO : how to build/make note triples without $photo
+                        
+                        my $person     = "$photo#person-$p->{id}";
+                        my $person_uri = $self->build_user_uri($p->{id});
+                        my $author_uri = $self->build_user_uri($p->{author});
+                        
+                        push @triples, [$photo,$self->uri_shortform("a","hasAnnotation"),$person];
+                        
+                        push @triples, [$person,$self->uri_shortform("a","annotates"),$photo];
+                        push @triples, [$person,$self->uri_shortform("a","author"),$author_uri];
+                        push @triples, [$person,$self->uri_shortform("a","personDepicted"),$person_uri];
+                        push @triples, [$person,$self->uri_shortform("a","body"),"$p->{realname} ($p->{username})"];
+                        push @triples, [$person,$self->uri_shortform("i","boundingBox"), "$p->{x} $p->{y} $p->{w} $p->{h}"] if defined $p->{x};
+                        # XXX: Is this correct?  New photo page vs. old photo page show different photos...
+                        push @triples, [$person,$self->uri_shortform("i","regionDepicts"),$data->{files}->{'Medium'}->{'uri'}] if defined $p->{x};
+                        push @triples, [$person,$self->uri_shortform("rdf","type"),$self->uri_shortform("flickr","person")];
                 }
         }
         
