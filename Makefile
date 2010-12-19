@@ -1,4 +1,4 @@
-#     PREREQ_PM => { Test::Simple=>q[>= 0.47], Net::Flickr::API=>q[>= 1.68], RDF::Simple=>q[>= 0.22], Date::Format=>q[>= 2.22], Readonly=>q[0], Date::Parse=>q[>= 2.27] }
+#     PREREQ_PM => { Test::Simple=>q[>= 0.47], File::Find::Rule=>q[0], IO::Scalar=>q[0], Memoize=>q[0], Date::Format=>q[>= 2.22], Encode=>q[>= 2.09], Date::Parse=>q[>= 2.27], IO::AtomicFile=>q[>= 2.101], Net::Flickr::RDF=>q[>= 2.1], Text::Unidecode=>q[>= 0.04], LWP::Simple=>q[>= 1.38], Image::MetaData::JPEG=>q[>= 0.15], Sys::Hostname=>q[0] }
 
 all : force_do_it
 	/usr/local/bin/perl Build --makefile_env_macros 1

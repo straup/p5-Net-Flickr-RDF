@@ -1,12 +1,14 @@
 ---
 name: Net-Flickr-RDF
-version: 2.1
+version: 2.2
 author:
   - 'Aaron Straup Cope E<lt>ascope@cpan.orgE<gt>'
 abstract: a.k.a RDF::Describes::Flickr
 license: perl
 resources:
   license: http://dev.perl.org/licenses/
+build_requires:
+  Test::Simple: '>= 0.47'
 requires:
   Date::Format: '>= 2.22'
   Date::Parse: '>= 2.27'
@@ -14,13 +16,13 @@ requires:
   RDF::Simple: '>= 0.22'
   Readonly: 0
   perl: '>= 5.8.0'
-build_requires:
-  Test::Simple: '>= 0.47'
+configure_requires:
+  Module::Build: 0.35
 provides:
   Net::Flickr::RDF:
     file: lib/Net/Flickr/RDF.pm
-    version: 2.1
-generated_by: Module::Build version 0.2808
+    version: 2.2
+generated_by: Module::Build version 0.35
 meta-spec:
-  url: http://module-build.sourceforge.net/META-spec-v1.2.html
-  version: 1.2
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4

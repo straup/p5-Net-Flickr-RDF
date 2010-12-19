@@ -71,25 +71,6 @@ OPTIONS
 
         Default is false.
 
-    * <query_trynt_color_api>
-        Boolean.
-
-        If true, the trynt colour extraction web service will be queried
-        with the URL for the "medium" sized photo. Each colour will be added
-        as it's own description, referenced from the photo's principal
-        description. For example :
-
-         <flickr:photo rdf:about="http://www.flickr.com/photos/35034348999@N01/299815039">
-           <trynt:hasColor rdf:resource="http://www.flickr.com/photos/35034348999@N01/299815039#c0c0c0"/>
-         </flickr:photo>
-
-         <trynt:color rdf:about="http://www.flickr.com/photos/35034348999@N01/299815039#c0c0c0">
-            <trynt:hexidecimal>c0c0c0</trynt:hexidecimal>
-            <trynt:count>654</trynt:count>
-         </trynt:color>
-
-        Default is false.
-
 PACKAGE METHODS
   __PACKAGE__->new($cfg)
     Where $cfg is either a valid *Config::Simple* object or the path to a
@@ -265,9 +246,6 @@ OBJECT METHODS YOU MAY CARE ABOUT
     skos
         http://www.w3.org/2004/02/skos/core#
 
-    trynt
-        http://www.trynt.com#
-
     ymaps
         urn:yahoo:maps
 
@@ -322,10 +300,10 @@ OBJECT METHODS YOU MAY CARE ABOUT
     An alias for *serialise_triples*
 
 VERSION
-    2.1
+    2.2
 
 DATE
-    $Date: 2008/02/24 18:38:07 $
+    $Date: 2010/12/19 19:06:12 $
 
 AUTHOR
     Aaron Straup Cope <ascope@cpan.org>
@@ -353,7 +331,6 @@ EXAMPLES
       xmlns:filtr="http://www.machinetags.org/wiki/filtr#process"
       xmlns:ph="http://www.machinetags.org/wiki/ph#camera"
       xmlns:exif="http://nwalsh.com/rdf/exif#"
-      xmlns:trynt="http://www.trynt.com#"
       xmlns:mt="x-urn:flickr:machinetag:"
       xmlns:exifi="http://nwalsh.com/rdf/exif-intrinsic#"
       xmlns:geonames="http://www.machinetags.org/wiki/geonames#locality"
@@ -398,11 +375,6 @@ EXAMPLES
         <rdfs:seeAlso rdf:resource="http://www.flickr.com/photos/35034348999@N01/2269291707#exif"/>
      </dcterms:StillImage>
 
-     <trynt:color rdf:about="http://www.flickr.com/photos/35034348999@N01/2269291707#c0c0c0">
-        <trynt:hexidecimal>c0c0c0</trynt:hexidecimal>
-        <trynt:count>1617</trynt:count>
-     </trynt:color>
-
      <flickr:place rdf:about="http://www.flickr.com/places/United+States/California/San+Francisco">
         <places:locality>San Francisco</places:locality>
         <places:region>California</places:region>
@@ -411,16 +383,6 @@ EXAMPLES
         <places:country>United States</places:country>
         <dc:isReferencedBy rdf:resource="http://www.flickr.com/photos/35034348999@N01/2269291707"/>
      </flickr:place>
-
-     <trynt:color rdf:about="http://www.flickr.com/photos/35034348999@N01/2269291707#200000">
-        <trynt:hexidecimal>200000</trynt:hexidecimal>
-        <trynt:count>409</trynt:count>
-     </trynt:color>
-
-     <trynt:color rdf:about="http://www.flickr.com/photos/35034348999@N01/2269291707#000000">
-        <trynt:hexidecimal>000000</trynt:hexidecimal>
-        <trynt:count>6157</trynt:count>
-     </trynt:color>
 
      <dcterms:StillImage rdf:about="http://farm3.static.flickr.com/2326/2269291707_2ec279037a_o.jpg">
         <dcterms:relation>Original</dcterms:relation>
@@ -433,11 +395,6 @@ EXAMPLES
      <flickr:tag rdf:about="http://www.flickr.com/photos/tags/cameraphone">
         <skos:prefLabel>cameraphone</skos:prefLabel>
      </flickr:tag>
-
-     <trynt:color rdf:about="http://www.flickr.com/photos/35034348999@N01/2269291707#c0c0a0">
-        <trynt:hexidecimal>c0c0a0</trynt:hexidecimal>
-        <trynt:count>754</trynt:count>
-     </trynt:color>
 
      <flickr:tag rdf:about="http://www.flickr.com/photos/35034348999@N01/tags/filtr">
         <skos:prefLabel>filtr</skos:prefLabel>
@@ -452,11 +409,6 @@ EXAMPLES
      <rdf:Description rdf:about="x-urn:freebsd:user">
         <rdfs:subClassOf rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
      </rdf:Description>
-
-     <trynt:color rdf:about="http://www.flickr.com/photos/35034348999@N01/2269291707#202020">
-        <trynt:hexidecimal>202020</trynt:hexidecimal>
-        <trynt:count>1030</trynt:count>
-     </trynt:color>
 
      <flickr:tag rdf:about="http://www.flickr.com/photos/35034348999@N01/tags/sanfrancisco">
         <skos:prefLabel>sanfrancisco</skos:prefLabel>
@@ -487,11 +439,6 @@ EXAMPLES
         <rdfs:seeAlso rdf:resource="http://www.flickr.com/photos/35034348999@N01/2269291707"/>
         <rdfs:seeAlso rdf:resource="http://www.flickr.com/photos/35034348999@N01/2269291707#exif"/>
      </dcterms:StillImage>
-
-     <trynt:color rdf:about="http://www.flickr.com/photos/35034348999@N01/2269291707#606060">
-        <trynt:hexidecimal>606060</trynt:hexidecimal>
-        <trynt:count>406</trynt:count>
-     </trynt:color>
 
      <dcterms:StillImage rdf:about="http://farm3.static.flickr.com/2326/2269291707_bc16eb038a_t.jpg">
         <dcterms:relation>Thumbnail</dcterms:relation>
@@ -549,11 +496,6 @@ EXAMPLES
         <dc:isReferencedBy rdf:resource="http://www.flickr.com/photos/35034348999@N01/2269291707"/>
      </flickr:machinetag>
 
-     <trynt:color rdf:about="http://www.flickr.com/photos/35034348999@N01/2269291707#808080">
-        <trynt:hexidecimal>808080</trynt:hexidecimal>
-        <trynt:count>1338</trynt:count>
-     </trynt:color>
-
      <rdf:Description rdf:about="x-urn:flickr:machinetag">
         <rdfs:subClassOf rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
      </rdf:Description>
@@ -569,11 +511,6 @@ EXAMPLES
         <skos:broader rdf:resource="http://www.machinetags.org/wiki/geonames#locality"/>
         <skos:prefLabel rdf:resource="geonames:locality=5391959"/>
      </flickr:tag>
-
-     <trynt:color rdf:about="http://www.flickr.com/photos/35034348999@N01/2269291707#a0a080">
-        <trynt:hexidecimal>a0a080</trynt:hexidecimal>
-        <trynt:count>570</trynt:count>
-     </trynt:color>
 
      <rdf:Description rdf:about="file:///home/asc/photos/2008/02/16/20080216-2269291707-ambient_pork.jpg">
         <dcterms:created>2008-02-17T10:36:02Z</dcterms:created>
@@ -608,16 +545,6 @@ EXAMPLES
         <dcterms:isPartOf rdf:resource="http://www.flickr.com/photos/35034348999@N01/sets/72157603613223494"/>
         <a:hasAnnotation rdf:resource="http://www.flickr.com/photos/straup/2269291707/#comment72157603921497994"/>
         <geo:Point rdf:resource="http://www.flickr.com/photos/35034348999@N01/2269291707#location"/>
-        <trynt:hasColor rdf:resource="http://www.flickr.com/photos/35034348999@N01/2269291707#000000"/>
-        <trynt:hasColor rdf:resource="http://www.flickr.com/photos/35034348999@N01/2269291707#c0c0c0"/>
-        <trynt:hasColor rdf:resource="http://www.flickr.com/photos/35034348999@N01/2269291707#808080"/>
-        <trynt:hasColor rdf:resource="http://www.flickr.com/photos/35034348999@N01/2269291707#a0a0a0"/>
-        <trynt:hasColor rdf:resource="http://www.flickr.com/photos/35034348999@N01/2269291707#202020"/>
-        <trynt:hasColor rdf:resource="http://www.flickr.com/photos/35034348999@N01/2269291707#80a080"/>
-        <trynt:hasColor rdf:resource="http://www.flickr.com/photos/35034348999@N01/2269291707#c0c0a0"/>
-        <trynt:hasColor rdf:resource="http://www.flickr.com/photos/35034348999@N01/2269291707#a0a080"/>
-        <trynt:hasColor rdf:resource="http://www.flickr.com/photos/35034348999@N01/2269291707#200000"/>
-        <trynt:hasColor rdf:resource="http://www.flickr.com/photos/35034348999@N01/2269291707#606060"/>
      </flickr:photo>
 
      <computer:user rdf:about="x-urn:no#asc">
@@ -635,11 +562,6 @@ EXAMPLES
      <flickr:tag rdf:about="http://www.flickr.com/photos/tags/filtr">
         <skos:prefLabel>filtr</skos:prefLabel>
      </flickr:tag>
-
-     <trynt:color rdf:about="http://www.flickr.com/photos/35034348999@N01/2269291707#a0a0a0">
-        <trynt:hexidecimal>a0a0a0</trynt:hexidecimal>
-        <trynt:count>1088</trynt:count>
-     </trynt:color>
 
      <rdf:Description rdf:about="x-urn:flickr:user">
         <rdfs:subClassOf rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
@@ -675,11 +597,6 @@ EXAMPLES
         <skos:broader rdf:resource="http://www.machinetags.org/wiki/ph#camera"/>
         <skos:prefLabel rdf:resource="ph:camera=n82"/>
      </flickr:tag>
-
-     <trynt:color rdf:about="http://www.flickr.com/photos/35034348999@N01/2269291707#80a080">
-        <trynt:hexidecimal>80a080</trynt:hexidecimal>
-        <trynt:count>811</trynt:count>
-     </trynt:color>
 
      <geoname:Feature rdf:about="http://ws.geonames.org/rdf?geonameId=5326012">
         <geoname:featureCode>PPLX</geoname:featureCode>
