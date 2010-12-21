@@ -12,19 +12,20 @@
 
 <http://aaronland.info/perl/net/delicious/Net-Flickr-RDF-2.2.tar.gz>
         dcterms:isVersionOf <http://aaronland.info/perl/flickr/rdf/> ;
-        dcterms:replaces    <http://aaronland.info/perl/net/flickr/rdf/Net-Flickr-RDF-2.1.tar.gz>; 
+        dcterms:replaces    <http://aaronland.info/perl/net/flickr/rdf/Net-Flickr-RDF-2.1.tar.gz>;
 
         doap:Version    [
                         doap:revision     "2.2" ;
-                        doap:created      "2010-12-19" ;
+                        doap:created      "2010-12-21" ;
                         ];
         asc:changes     [
                         asc:update        "Remove Trynt colorspace triples (the API appears to be gone)" ;
-                        ] . 
+                        asc:bugfix        "Remove squirrely dependency strings in Build.PL" ;
+                        ] .
 
 <http://aaronland.info/perl/net/delicious/Net-Flickr-RDF-2.1.tar.gz>
         dcterms:isVersionOf <http://aaronland.info/perl/flickr/rdf/> ;
-        dcterms:replaces    <http://aaronland.info/perl/net/flickr/rdf/Net-Flickr-RDF-2.01.tar.gz>; 
+        dcterms:replaces    <http://aaronland.info/perl/net/flickr/rdf/Net-Flickr-RDF-2.01.tar.gz>;
 
         doap:Version    [
                         doap:revision     "2.1" ;
@@ -33,7 +34,7 @@
         asc:changes     [
                         asc:addition      "Capture Flickr Places information (old skool geo resources are linked via rdf:seeAlso)" ;
                         asc:update        "Require Net::Flickr::API 1.68" ;
-                        ] . 
+                        ] .
 
 <http://aaronland.info/perl/net/delicious/Net-Flickr-RDF-2.01.tar.gz>
         dcterms:isVersionOf <http://aaronland.info/perl/flickr/rdf/> ;

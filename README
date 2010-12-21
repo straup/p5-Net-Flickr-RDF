@@ -27,6 +27,7 @@ OPTIONS
     or a valid Config::Simple config file. Options are grouped by "block".
 
   flickr
+
     * api_key
         String. *required*
 
@@ -43,6 +44,7 @@ OPTIONS
         A valid Flickr Auth API token.
 
   rdf
+
     * query_geonames
         Boolean.
 
@@ -73,6 +75,7 @@ OPTIONS
 
 PACKAGE METHODS
   __PACKAGE__->new($cfg)
+
     Where $cfg is either a valid *Config::Simple* object or the path to a
     file that can be parsed by *Config::Simple*.
 
@@ -80,35 +83,46 @@ PACKAGE METHODS
 
 PACKAGE METHODS YOU MAY CARE ABOUT
   __PACKAGE__->build_photo_uri(\%data)
+
     Returns a URL as a string.
 
   __PACKAGE__->build_geo_uri(\%data)
+
   __PACKAGE__->build_user_tag_uri(\@data)
+
     Returns a URL as a string.
 
   __PACKAGE__->build_global_tag_uri(\@data)
+
     Returns a URL as a string.
 
   __PACKAGE__->build_machinetag_uri(\@data)
+
     Returns a URL as a string.
 
   __PACKAGE__->build_user_uri($user_id)
+
     Returns a URL as a string.
 
   __PACKAGE__->build_group_uri($group_id)
+
     Returns a URL as a string.
 
   __PACKAGE__->build_grouppool_uri($group_id)
+
     Returns a URL as a string.
 
   __PACKAGE__->build_photoset_uri(\%set_data)
+
     Returns a URL as a string.
 
   __PACKAGE__->prune_triples(\@triples)
+
     Removes duplicate triples from *@triples*. Returns an array reference.
 
 OBJECT METHODS YOU SHOULD CARE ABOUT
   $obj->describe_photo(\%args)
+
     Valid arguments are :
 
     * photo_id
@@ -126,80 +140,99 @@ OBJECT METHODS YOU SHOULD CARE ABOUT
 
 OBJECT METHODS YOU MAY CARE ABOUT
   $obj->collect_photo_data($photo_id,$secret)
+
     Returns a hash ref of the meta data associated with a photo.
 
     If any errors are unencounter an error is recorded via the log method
     and the method returns undef.
 
   $obj->collect_group_data($group_id)
+
     Returns a hash ref of the meta data associated with a group.
 
     If any errors are unencounter an error is recorded via the log method
     and the method returns undef.
 
   $obj->collect_user_data($user_id)
+
     Returns a hash ref of the meta data associated with a user.
 
     If any errors are unencounter an error is recorded via the log method
     and the method returns undef.
 
   $obj->collect_photoset_data($photoset_id)
+
     Returns a hash ref of the meta data associated with a photoset.
 
     If any errors are unencounter an error is recorded via the log method
     and the method returns undef.
 
   $obj->collect_cc_data()
+
     Returns a hash ref of the Creative Commons licenses used by Flickr.
 
     If any errors are unencounter an error is recorded via the log method
     and the method returns undef.
 
   $obj->collect_comment_data()
+
     Returns a hash ref of comments made about a photo.
 
   $obj->make_photo_triples(\%data)
+
     Returns an array ref (or alist in a wantarray context) of array refs of
     the meta data associated with a photo (*%data*).
 
   $obj->make_user_triples(\%user_data)
+
     Returns an array ref (or list in a wantarray context) of array refs of
     the meta data associated with a user (*%user_data*).
 
   $obj->make_tag_triples(\@tag_data)
+
     Returns an array ref (or list in a wantarray context) of array refs of
     the meta data associated with a tag (*@tag_data*).
 
   $pkg->make_photoset_triples(\%set_data)
+
     Returns an array ref (or list in a wantarray context) of array refs of
     the meta data associated with a photoset (*%set_data*).
 
   $obj->make_geo_triples(\%geo_data)
+
   $obj->make_flickr_places_triples(\%geo_data)
+
   $obj->make_geonames_triples(\%geo_data)
+
   $obj->make_group_triples(\%group_data)
+
     Returns an array ref (or list in a wantarray context) of array refs of
     the meta data associated with a group (*%group_data*).
 
   $obj->make_grouppool_triples(\%group_data)
+
     Returns an array ref (or list in a wantarray context) of array refs of
     the meta data associated with a group pool (*%group_data*).
 
   $obj->make_cc_triples($url)
+
     Returns an array ref (or list in a wantarray context) of array refs of
     the meta data associated with a Creative Commons license (*$url*).
 
   $obj->make_comment_triples(\%data)
+
     Returns an array ref (or alist in a wantarray context) of array refs of
     the meta data associated with a photo comment (*%data*).
 
   $obj->geodata_from_tags(\%data)
+
     Try to parse out geolocative data from a collection of tag data.
 
     Returns a hash ref (containing 'lat' and 'long' keys) on success or
     undef if there were no matches.
 
   $obj->namespaces()
+
     Returns a hash ref of the prefixes and namespaces used by
     *Net::Flickr::RDF*
 
@@ -250,6 +283,7 @@ OBJECT METHODS YOU MAY CARE ABOUT
         urn:yahoo:maps
 
   $obj->add_namespace($prefix, $namespace)
+
     Add a prefix and namespace URI to the list of known namespaces.
 
     This method returns a string containing the prefix you should use for
@@ -260,9 +294,11 @@ OBJECT METHODS YOU MAY CARE ABOUT
      "nfr_" + I<the prefix passed to the method>
 
   $obj->namespace_prefix($uri)
+
     Return the namespace prefix for *$uri*
 
   $obj->uri_shortform($prefix,$name)
+
     Returns a string in the form of *prefix*:*property*. The property is the
     value of $name. The prefix passed may or may be the same as the prefix
     returned depending on whether or not the user has defined or redefined
@@ -272,6 +308,7 @@ OBJECT METHODS YOU MAY CARE ABOUT
     assumed to be one of prefixes in the default list of namespaces.
 
   $obj->api_call(\%args)
+
     Valid args are :
 
     * method
@@ -290,13 +327,16 @@ OBJECT METHODS YOU MAY CARE ABOUT
     XML::LibXML is installed) or a *XML::XPath* object.
 
   $obj->log()
+
     Returns a *Log::Dispatch* object.
 
   $obj->serialise_triples(\@triples,\*$fh)
+
     Print *@triples* as RDF/XML to a filehandle (*$fh*). If no filehandle is
     defined, prints to STDOUT.
 
   $obj->serialize_triples(\@triples,\*$fh)
+
     An alias for *serialise_triples*
 
 VERSION
@@ -310,6 +350,7 @@ AUTHOR
 
 EXAMPLES
   CONFIG FILES
+
     This is an example of a Config::Simple file used to collect RDF data
     from Flickr
 
@@ -319,6 +360,7 @@ EXAMPLES
      auth_token=123-omgwtf4u
 
   RDF
+
     This is an example of an RDF dump for a photograph backed up from Flickr
     :
 
