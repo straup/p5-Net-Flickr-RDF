@@ -10,7 +10,7 @@ my $build = Module::Build->new(module_name => 'Net::Flickr::RDF',
 			       license           => 'perl',
 			       requires => {
 				   'perl'               => '5.8.0',
-				   'Net::Flickr::API'   => '1.68',
+				   'Net::Flickr::API'   => '1.7',
 				   'RDF::Simple'        => '0.22',
 				   'Date::Parse'        => '2.27',
 				   'Date::Format'       => '2.22',
