@@ -19,7 +19,7 @@ provides:
 requires:
   Date::Format: 2.22
   Date::Parse: 2.27
-  Net::Flickr::API: 1.68
+  Net::Flickr::API: 1.7
   RDF::Simple: 0.22
   Readonly: 0
   perl: v5.8.0
