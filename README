@@ -348,13 +348,16 @@ DATE
 AUTHOR
     Aaron Straup Cope <ascope@cpan.org>
 
+CONTRIBUTORS
+    Thomas Sibley <tsibley@cpan.org>
+
 EXAMPLES
   CONFIG FILES
 
     This is an example of a Config::Simple file used to collect RDF data
     from Flickr
 
-     [flickr] 
+     [flickr]
      api_key=asd6234kjhdmbzcxi6e323
      api_secret=s00p3rs3k3t
      auth_token=123-omgwtf4u

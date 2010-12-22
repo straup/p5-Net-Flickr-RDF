@@ -16,10 +16,11 @@
 
         doap:Version    [
                         doap:revision     "2.2" ;
-                        doap:created      "2010-12-21" ;
+                        doap:created      "2010-12-22" ;
                         ];
         asc:changes     [
                         asc:update        "Remove Trynt colorspace triples (the API appears to be gone)" ;
+			asc:update	  "TSIBLEY's patches https://github.com/straup/p5-Net-Flickr-RDF/pull/1" ;
                         asc:bugfix        "Remove squirrely dependency strings in Build.PL" ;
                         ] .
 
