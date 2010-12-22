@@ -370,7 +370,7 @@ sub build_photo_uri {
         my $self = shift;
         my $data = shift;
 
-        return sprintf("%s%s/%d", $FLICKR_URL_PHOTOS, $data->{user_id}, $data->{photo_id});
+        return sprintf("%s%s/%s", $FLICKR_URL_PHOTOS, $data->{user_id}, $data->{photo_id});
 }
 
 =head2 __PACKAGE__->build_geo_uri(\%data)
@@ -660,9 +660,9 @@ sub collect_photo_data {
                                            secret   => $secret}});       
 
         if ($exif) {
-                foreach my $tag ($exif->findnodes("/rsp/photo/exif[\@tagspace='EXIF']")) {
+                foreach my $tag ($exif->findnodes("/rsp/photo/exif[\@tagspace='EXIF']"), $exif->findnodes("/rsp/photo/exif[\@tagspace='ExifIFD']")) {
                         
-                        my $facet   = $tag->getAttribute("tagspace");
+                        my $facet   = 'EXIF'; # $tag->getAttribute("tagspace");
                         my $tag_dec = $tag->getAttribute("tag");
                         my $value   = $tag->findvalue("clean") || $tag->findvalue("raw");
                         $data{exif}->{$facet}->{$tag_dec} = $value;
@@ -734,6 +734,33 @@ sub collect_photo_data {
                 
                 $data{users}->{$note{author}} = $self->collect_user_data($note{author});
         }    	   
+
+        #
+        # People in photo
+        #
+
+        my $folks = $self->api_call({
+            method => "flickr.photos.people.getList",
+            args   => { photo_id => $id }
+        });
+
+        if ($folks) {
+            foreach my $person ($folks->findnodes("/rsp/people/person")) {
+                $data{people} ||= [];
+
+                my %person = map {
+                    $_ => $person->getAttribute($_)
+                } qw (x y h w username realname);
+                
+                $person{id} = $person->getAttribute('nsid');
+                $person{author} = $person->getAttribute('added_by');
+
+                push @{$data{people}}, \%person;
+
+                $data{users}->{$person{id}} = $self->collect_user_data($person{id});
+                $data{users}->{$person{author}} = $self->collect_user_data($person{author});
+            }
+        }
 
         #
         # Geo
@@ -1045,7 +1072,7 @@ sub make_photo_triples {
         my $self = shift;
         my $data = shift;
 
-        my $photo   = sprintf("%s%s/%d", $FLICKR_URL_PHOTOS, $data->{user_id}, $data->{photo_id});        
+        my $photo   = sprintf("%s%s/%s", $FLICKR_URL_PHOTOS, $data->{user_id}, $data->{photo_id});        
         my @triples = ();
 
         # 
@@ -1070,6 +1097,7 @@ sub make_photo_triples {
         my $flickr_machinetag = $DEFAULT_NS{flickr}."machinetag";
         my $flickr_note       = $DEFAULT_NS{flickr}."note";
         my $flickr_comment    = $DEFAULT_NS{flickr}."comment";
+        my $flickr_persontag  = $DEFAULT_NS{flickr}."persontag";
         my $flickr_group      = $DEFAULT_NS{flickr}."group";
         my $flickr_grouppool  = $DEFAULT_NS{flickr}."grouppool";
         
@@ -1093,6 +1121,10 @@ sub make_photo_triples {
 
         if (exists($data->{comments})) {
                 push @triples, [$flickr_comment, $self->uri_shortform("rdfs","subClassOf"), $anno_annotation];
+        }
+
+        if (exists($data->{people})) {
+                push @triples, [$flickr_persontag, $self->uri_shortform("rdfs","subClassOf"), $anno_annotation];
         }
 
         #
@@ -1228,6 +1260,33 @@ sub make_photo_triples {
         }
         
         #
+        # people annotations
+        #
+        
+        if (exists($data->{people})) {
+                
+                foreach my $p (@{$data->{people}}) {
+                        
+                        # TO DO : how to build/make note triples without $photo
+                        
+                        my $person     = "$photo#person-$p->{id}";
+                        my $person_uri = $self->build_user_uri($p->{id});
+                        my $author_uri = $self->build_user_uri($p->{author});
+                        
+                        push @triples, [$photo,$self->uri_shortform("a","hasAnnotation"),$person];
+                        
+                        push @triples, [$person,$self->uri_shortform("a","annotates"),$photo];
+                        push @triples, [$person,$self->uri_shortform("a","author"),$author_uri];
+                        push @triples, [$person,$self->uri_shortform("a","personDepicted"),$person_uri];
+                        push @triples, [$person,$self->uri_shortform("a","body"),"$p->{realname} ($p->{username})"];
+                        push @triples, [$person,$self->uri_shortform("i","boundingBox"), "$p->{x} $p->{y} $p->{w} $p->{h}"] if defined $p->{x};
+                        # XXX: Is this correct?  New photo page vs. old photo page show different photos...
+                        push @triples, [$person,$self->uri_shortform("i","regionDepicts"),$data->{files}->{'Medium'}->{'uri'}] if defined $p->{x};
+                        push @triples, [$person,$self->uri_shortform("rdf","type"),$self->uri_shortform("flickr","person")];
+                }
+        }
+        
+        #
         # users (authors)
         #
         
@@ -1264,7 +1323,7 @@ sub make_photo_triples {
 
                 foreach my $tag (keys %{$data->{exif}->{$facet}}) {
                         
-                        my $label = $RDFMAP{$facet}->{$tag};
+                        my $label = $tag =~ /^\d+$/ ? $RDFMAP{$facet}->{$tag} : $tag;
                         
                         if (! $label) {
                                 $self->log()->warning("can't find any label for $facet tag : $tag");
@@ -1275,7 +1334,7 @@ sub make_photo_triples {
 
                         # dateTimeOriginal/Digitized
 
-                        if (($facet eq "EXIF") && (($tag == 36867) || ($tag == 36868))) {
+                        if ( $facet eq "EXIF" and $label =~ /^dateTime(?:Original|Digitized)$/ ) {
 
                                 my $time = str2time($value);
                                 $value   = time2str("%Y-%m-%dT%H:%M:%S%Z", $time);
@@ -1556,7 +1615,7 @@ sub make_geonames_triples {
                 my $photo_url = $self->build_photo_uri($data);
                 my $geo_url = $self->build_geo_uri($data);
 
-                my $geoname_url = sprintf("%s?geonameId=%d", $GEONAMES_URL_RDF, $xml->findvalue("/geonames/geoname/geonameId"));
+                my $geoname_url = sprintf("%s?geonameId=%s", $GEONAMES_URL_RDF, $xml->findvalue("/geonames/geoname/geonameId"));
 
                 #
                 # basic reverse geocoding
